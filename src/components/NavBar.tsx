@@ -1,7 +1,16 @@
 import React, { FC } from "react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+
+import { Plus } from "lucide-react";
 
 type TProps = {};
 const NavBar: FC<TProps> = (props) => {
@@ -15,14 +24,42 @@ const NavBar: FC<TProps> = (props) => {
             width={40}
             height={40}
           />
-          NoteBot
+          <div className="font-bold">NoteBot</div>
         </Link>
         <div className="ms-auto">
           <SignedOut>
-            <SignInButton />
+            <div className="flex gap-1">
+              <SignInButton>
+                <Button>Sign In</Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button variant="outline">Sign Up</Button>
+              </SignUpButton>
+            </div>
           </SignedOut>
+
           <SignedIn>
-            <UserButton showName={true} />
+            <div className="flex gap-2">
+              <Button className="gap-1" size={"sm"}>
+                <Plus />
+                Add Note
+              </Button>
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    userButton: {
+                      display: "flex",
+                      flexDirection: "row-reverse",
+                    },
+                    avatarBox: {
+                      width: 32,
+                      height: 32,
+                    },
+                  },
+                }}
+              />
+            </div>
           </SignedIn>
         </div>
       </div>
