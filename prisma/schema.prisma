@@ -13,20 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String
-  Note  Note[]
-
-  @@map("users")
-}
-
 model Note {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String?
-  authorId  String   @db.ObjectId
-  author    User     @relation(fields: [authorId], references: [id])
+  // authorId comes from clerk auth
+  authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
