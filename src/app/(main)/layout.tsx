@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import NavBar from "@/components/NavBar";
 
 import "../globals.css";
+import ToastProvider from "@/components/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <ToastProvider />
             <NavBar />
             <div className="mx-6 mt-2 md:mx-24">{children}</div>
           </ThemeProvider>

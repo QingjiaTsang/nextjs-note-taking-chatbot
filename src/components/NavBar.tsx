@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ModeToggle } from "@/components/ModeToggle";
+import WriteNoteModal from "@/components/WriteNoteModal";
 
 import { Menu, Plus } from "lucide-react";
 
@@ -60,10 +61,12 @@ const NavBar: FC<TProps> = (props) => {
 
               <SignedIn>
                 <DropdownMenuItem>
-                  <Button className="gap-1" size={"sm"}>
-                    <Plus />
-                    Add Note
-                  </Button>
+                  <WriteNoteModal modalAction="Create">
+                    <Button className="gap-1" size={"sm"}>
+                      <Plus />
+                      Add Note
+                    </Button>
+                  </WriteNoteModal>
                 </DropdownMenuItem>
               </SignedIn>
 
@@ -103,10 +106,12 @@ const NavBar: FC<TProps> = (props) => {
           </SignedOut>
 
           <SignedIn>
-            <Button className="gap-1" size={"sm"}>
-              <Plus />
-              Add Note
-            </Button>
+            <WriteNoteModal modalAction="Create">
+              <Button className="gap-1" size={"sm"}>
+                <Plus />
+                Add Note
+              </Button>
+            </WriteNoteModal>
           </SignedIn>
         </div>
 

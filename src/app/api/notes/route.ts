@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import {
+  createNoteSchema,
+  editNoteSchema,
+  deleteNoteSchema,
+} from "@/zodValidation/notes";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { pageNum?: string; pageSize?: string } },
-) {
+export async function GET(request: NextRequest) {
   try {
-    const { pageNum = "1", pageSize = "10" } = params;
+    const { searchParams } = new URL(request.url);
+    const pageNum = searchParams.get("pageNum") ?? "1";
+    const pageSize = searchParams.get("pageSize") ?? "10";
 
+    // ! Note: if the request comes from server component fetcher, then userId out of auth() will be null
+    // that's maybe because SSR component lose the context of the clerk auth when doing data fetching
+    // so make sure making the request from client component
     const { userId } = auth();
 
     if (!userId) {
@@ -35,18 +42,18 @@ export async function GET(
 
 export async function POST(request: NextRequest) {
   try {
-    // todo: 改用zod来进行校验
     const body = await request.json();
-    const { title, content } = body;
+    const parsedResult = createNoteSchema.safeParse(body);
+    if (!parsedResult.success) {
+      console.error("parsedResult", parsedResult);
+      return NextResponse.json({ error: "Invalid Input" }, { status: 400 });
+    }
+    const { title, content } = parsedResult.data;
 
     const { userId } = auth();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (!title) {
-      return NextResponse.json({ error: "Missing title" }, { status: 400 });
     }
 
     const note = await prisma.note.create({
@@ -69,15 +76,15 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    // todo: 改用zod来进行校验
     const body = await request.json();
-    const { id, title, content } = body;
+    const parsedResult = editNoteSchema.safeParse(body);
+    if (!parsedResult.success) {
+      console.error("parsedResult", parsedResult);
+      return NextResponse.json({ error: "Invalid Input" }, { status: 400 });
+    }
+    const { id, title, content } = parsedResult.data;
 
     const { userId } = auth();
-
-    if (!title) {
-      return NextResponse.json({ error: "Missing title" }, { status: 400 });
-    }
 
     const note = await prisma.note.findUnique({
       where: {
@@ -113,12 +120,15 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-// delete user's notes
 export async function DELETE(request: NextRequest) {
   try {
-    // todo: 改用zod来进行校验
     const body = await request.json();
-    const { id } = body;
+    const parsedResult = deleteNoteSchema.safeParse(body);
+    if (!parsedResult.success) {
+      console.error("parsedResult", parsedResult);
+      return NextResponse.json({ error: "Invalid Input" }, { status: 400 });
+    }
+    const { id } = parsedResult.data;
 
     const { userId } = auth();
 
@@ -136,13 +146,16 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const deletedNote = await prisma.note.delete({
+    await prisma.note.delete({
       where: {
         id,
       },
     });
 
-    return NextResponse.json(deletedNote, { status: 200 });
+    return NextResponse.json(
+      { message: "Note deleted successfully" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

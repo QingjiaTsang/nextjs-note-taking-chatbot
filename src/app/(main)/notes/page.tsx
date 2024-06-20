@@ -1,7 +1,10 @@
-import React, { FC } from 'react';
+import NoteList from "@/app/(main)/notes/NoteList";
 
-type TProps = {};
-const NotesPage: FC<TProps> = (props) => {
-  return <>notes</>;
+const NotesPage = () => {
+  return (
+    <div>
+      <NoteList />
+    </div>
+  );
 };
 export default NotesPage;

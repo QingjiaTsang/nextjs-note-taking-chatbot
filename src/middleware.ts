@@ -1,6 +1,6 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(['/notes']);
+const isProtectedRoute = createRouteMatcher(["/notes"]);
 
 export default clerkMiddleware((auth, req) => {
   // Restrict admin routes to users with specific permissions
@@ -10,5 +10,5 @@ export default clerkMiddleware((auth, req) => {
 });
 
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
