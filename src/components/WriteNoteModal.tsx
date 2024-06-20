@@ -38,7 +38,6 @@ type TProps = {
   children: React.ReactNode;
 };
 const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
-  console.log("noteToEdit333", noteToEdit);
   const [open, setOpen] = useState(false);
 
   const { mutate } = useSWRConfig();
@@ -72,6 +71,28 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
         ...values,
       }),
     });
+  };
+
+  const handleDeleteNote = async () => {
+    try {
+      await fetch("/api/notes", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: noteToEdit!.id,
+        }),
+      });
+
+      mutate("/api/notes?pageNum=1&pageSize=999");
+      toast.success("Note deleted");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete note");
+    }
+
+    setOpen(false);
   };
 
   const onSubmit = async (values: TCreateNoteData) => {
@@ -136,9 +157,16 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
             />
 
             <div className="flex">
-              <Button type="submit" className="ms-auto">
-                {modalAction}
-              </Button>
+              <div className="ms-auto flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleDeleteNote}
+                >
+                  Delete
+                </Button>
+                <Button type="submit">{modalAction}</Button>
+              </div>
             </div>
           </form>
         </Form>
