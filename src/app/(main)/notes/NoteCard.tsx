@@ -5,12 +5,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
-import WriteNoteModal from "@/components/WriteNoteModal";
+import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
 
 type TProps = {
   note: Note;
@@ -19,10 +18,7 @@ type TProps = {
 const NoteCard: FC<TProps> = ({ note }) => {
   return (
     <WriteNoteModal modalAction="Edit" noteToEdit={note}>
-      <Card
-        className="cursor-pointer shadow-md transition-shadow hover:shadow-lg hover:shadow-slate-600"
-        onClick={() => {}}
-      >
+      <Card className="cursor-pointer shadow-md transition-shadow hover:shadow-lg hover:shadow-slate-600">
         <CardHeader>
           <CardTitle className="group w-full truncate">{note.title}</CardTitle>
           <hr />

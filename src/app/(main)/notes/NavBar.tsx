@@ -2,13 +2,7 @@
 import React, { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
@@ -21,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ModeToggle } from "@/components/ModeToggle";
-import WriteNoteModal from "@/components/WriteNoteModal";
+import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
 
 import { Menu, Plus } from "lucide-react";
 
@@ -69,41 +63,12 @@ const NavBar: FC<TProps> = (props) => {
                   </WriteNoteModal>
                 </DropdownMenuItem>
               </SignedIn>
-
-              <SignedOut>
-                <DropdownMenuItem>
-                  <SignInButton>
-                    <Button className="w-full">Sign In</Button>
-                  </SignInButton>
-                </DropdownMenuItem>
-              </SignedOut>
-
-              <SignedOut>
-                <DropdownMenuItem>
-                  <SignUpButton>
-                    <Button variant="outline" className="w-full">
-                      Sign Up
-                    </Button>
-                  </SignUpButton>
-                </DropdownMenuItem>
-              </SignedOut>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
         <div className="ms-auto hidden items-center gap-1 md:flex">
           <ModeToggle />
-
-          <SignedOut>
-            <div className="flex gap-1">
-              <SignInButton>
-                <Button>Sign In</Button>
-              </SignInButton>
-              <SignUpButton>
-                <Button variant="outline">Sign Up</Button>
-              </SignUpButton>
-            </div>
-          </SignedOut>
 
           <SignedIn>
             <WriteNoteModal modalAction="Create">

@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
-import NavBar from "@/components/NavBar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import ToastProvider from "@/components/ToastProvider";
 
 import "../globals.css";
-import ToastProvider from "@/components/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "NoteBot",
   description: "Chat with AI Note Taking Bot",
 };
@@ -32,8 +30,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ToastProvider />
-            <NavBar />
-            <div className="mx-6 mt-2 md:mx-24">{children}</div>
+            <div>{children}</div>
           </ThemeProvider>
         </ClerkProvider>
       </body>

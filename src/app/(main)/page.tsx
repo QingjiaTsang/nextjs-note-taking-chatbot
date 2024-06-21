@@ -1,7 +1,6 @@
-import { redirect } from "next/navigation";
+import OfficialWebsite from "@/components/OfficialWebsite";
 
-const Page = () => {
-  // redirect("/notes");
-  return <>home page</>;
+const HomePage = () => {
+  return <OfficialWebsite />;
 };
-export default Page;
+export default HomePage;

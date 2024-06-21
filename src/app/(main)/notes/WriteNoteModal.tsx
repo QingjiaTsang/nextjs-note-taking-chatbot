@@ -100,12 +100,12 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
       if (modalAction === "Create") {
         await handleCreateNote(values);
         toast.success("Note created");
+        form.reset();
       } else {
         await handleUpdateNote(values);
         toast.success("Note updated");
       }
 
-      // form.reset();
       mutate("/api/notes?pageNum=1&pageSize=999");
     } catch (error) {
       console.error(error);
@@ -158,13 +158,15 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
 
             <div className="flex">
               <div className="ms-auto flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleDeleteNote}
-                >
-                  Delete
-                </Button>
+                {modalAction === "Update" && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDeleteNote}
+                  >
+                    Delete
+                  </Button>
+                )}
                 <Button type="submit">{modalAction}</Button>
               </div>
             </div>
