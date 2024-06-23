@@ -81,13 +81,17 @@ const deleteNoteFetcher = async (
 };
 
 type TProps = {
-  modalAction: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  modalActionCaption: string;
   noteToEdit?: Note;
-  children: React.ReactNode;
 };
-const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
-  const [open, setOpen] = useState(false);
-
+const WriteNoteModal: FC<TProps> = ({
+  open,
+  setOpen,
+  modalActionCaption,
+  noteToEdit,
+}) => {
   const { mutate } = useSWRConfig();
 
   const { trigger: deleteNote, isMutating: isDeleting } = useSWRMutation(
@@ -137,12 +141,9 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <div>{children}</div>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{modalAction} Note</DialogTitle>
+          <DialogTitle>{modalActionCaption} Note</DialogTitle>
           <DialogDescription>
             Write your note here. Click add when you're done.
           </DialogDescription>
@@ -198,7 +199,7 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
                   type="submit"
                   isLoading={form.formState.isSubmitting}
                 >
-                  {modalAction}
+                  {modalActionCaption}
                 </LoadingButton>
               </div>
             </div>

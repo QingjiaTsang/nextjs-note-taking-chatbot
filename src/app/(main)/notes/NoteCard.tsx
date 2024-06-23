@@ -21,9 +21,14 @@ type TProps = {
 };
 
 const NoteCard: FC<TProps> = ({ note }) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <WriteNoteModal modalAction="Edit" noteToEdit={note}>
-      <Card className="cursor-pointer shadow-md transition-shadow hover:shadow-lg hover:shadow-slate-600">
+    <>
+      <Card
+        className="cursor-pointer shadow-md transition-shadow hover:shadow-lg hover:shadow-slate-600"
+        onClick={() => setOpen(true)}
+      >
         <CardHeader>
           <HoverCard>
             <HoverCardTrigger>
@@ -43,7 +48,14 @@ const NoteCard: FC<TProps> = ({ note }) => {
           <p className="w-full truncate">{note.content}</p>
         </CardContent>
       </Card>
-    </WriteNoteModal>
+
+      <WriteNoteModal
+        modalActionCaption="Edit"
+        noteToEdit={note}
+        open={open}
+        setOpen={setOpen}
+      />
+    </>
   );
 };
 export default NoteCard;

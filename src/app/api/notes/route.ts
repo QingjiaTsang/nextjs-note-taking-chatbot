@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const pageNum = searchParams.get("pageNum") ?? "1";
     const pageSize = searchParams.get("pageSize") ?? "10";
 
-    // ! Note: if the request comes from server component fetcher, then userId out of auth() will be null
+    // !Note: if the request comes from server component fetcher, then userId out of auth() will be null
     // that's maybe because SSR component lose the context of the clerk auth when doing data fetching
     // so make sure making the request from client component
     const { userId } = auth();

@@ -1,15 +1,20 @@
 import OpenAI from "openai";
 
 const apiKey = process.env.OPENAI_API_KEY;
+// proxy from chatanywhere
+// https://github.com/chatanywhere/GPT_API_free
+const baseURL = process.env.OPENAI_API_BASE_URL;
 
 if (!apiKey) {
   throw new Error("Missing OPENAI_API_KEY");
 }
 
+if (!baseURL) {
+  throw new Error("Missing OPENAI_API_BASE_URL");
+}
+
 export const openai = new OpenAI({
-  // proxy from chatanywhere
-  // https://github.com/chatanywhere/GPT_API_free
-  baseURL: "https://api.chatanywhere.tech/v1",
+  baseURL,
   apiKey,
 });
 

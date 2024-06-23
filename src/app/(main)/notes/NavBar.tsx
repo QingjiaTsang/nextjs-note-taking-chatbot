@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SignedIn, UserButton } from "@clerk/nextjs";
@@ -17,11 +17,15 @@ import {
 import { ModeToggle } from "@/components/ModeToggle";
 import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
 
-import { Menu, Plus } from "lucide-react";
+import { Bot, Menu, Plus } from "lucide-react";
+import AIChatModal from "@/components/AIChatModal";
 
 type TProps = {};
 const NavBar: FC<TProps> = (props) => {
   const { theme } = useTheme();
+
+  const [openWriteNoteModal, setOpenWriteNoteModal] = useState(false);
+  const [openAIChatModal, setOpenAIChatModal] = useState(false);
 
   return (
     <div className="p-4 shadow">
@@ -47,7 +51,7 @@ const NavBar: FC<TProps> = (props) => {
 
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <div className="flex items-center gap-1">
+                <div className="flex w-full items-center gap-1">
                   <ModeToggle />
                   <div>{theme === "dark" ? "Dark" : "Light"} Mode</div>
                 </div>
@@ -55,12 +59,25 @@ const NavBar: FC<TProps> = (props) => {
 
               <SignedIn>
                 <DropdownMenuItem>
-                  <WriteNoteModal modalAction="Create">
-                    <Button className="gap-1" size={"sm"}>
-                      <Plus />
-                      Add Note
-                    </Button>
-                  </WriteNoteModal>
+                  <Button
+                    className="w-full"
+                    size={"sm"}
+                    onClick={() => setOpenWriteNoteModal(true)}
+                  >
+                    <Plus />
+                    Add Note
+                  </Button>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem>
+                  <Button
+                    className="w-full"
+                    size={"sm"}
+                    onClick={() => setOpenAIChatModal(true)}
+                  >
+                    <Bot className="mr-2 h-5 w-5" />
+                    AI Chat
+                  </Button>
                 </DropdownMenuItem>
               </SignedIn>
             </DropdownMenuContent>
@@ -71,12 +88,19 @@ const NavBar: FC<TProps> = (props) => {
           <ModeToggle />
 
           <SignedIn>
-            <WriteNoteModal modalAction="Create">
-              <Button className="gap-1" size={"sm"}>
-                <Plus />
-                Add Note
-              </Button>
-            </WriteNoteModal>
+            <Button
+              className="gap-1"
+              size={"sm"}
+              onClick={() => setOpenWriteNoteModal(true)}
+            >
+              <Plus />
+              Add Note
+            </Button>
+
+            <Button size={"sm"} onClick={() => setOpenAIChatModal(true)}>
+              <Bot className="mr-2 h-5 w-5" />
+              AI Chat
+            </Button>
           </SignedIn>
         </div>
 
@@ -101,6 +125,17 @@ const NavBar: FC<TProps> = (props) => {
           </SignedIn>
         </div>
       </div>
+
+      <WriteNoteModal
+        modalActionCaption="Create"
+        open={openWriteNoteModal}
+        setOpen={setOpenWriteNoteModal}
+      />
+
+      <AIChatModal
+        open={openAIChatModal}
+        onClose={() => setOpenAIChatModal(false)}
+      />
     </div>
   );
 };
