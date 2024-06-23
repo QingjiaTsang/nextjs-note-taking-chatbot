@@ -31,6 +31,54 @@ import { TCreateNoteData, createNoteSchema } from "@/zodValidation/notes";
 
 import { toast } from "react-toastify";
 import { useSWRConfig } from "swr";
+import useSWRMutation from "swr/mutation";
+import { LoadingButton } from "@/components/LoadingButton";
+
+const createNoteFetcher = async (values: TCreateNoteData) => {
+  const res = await fetch("/api/notes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create note");
+  }
+};
+
+const updateNoteFetcher = async (
+  values: Pick<Note, "id" | "title" | "content">,
+) => {
+  const res = await fetch("/api/notes", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...values,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to update note");
+  }
+};
+
+const deleteNoteFetcher = async (
+  url: string,
+  { arg }: { arg: { id: string } },
+) => {
+  const { id } = arg;
+  await fetch("/api/notes", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+};
 
 type TProps = {
   modalAction: string;
@@ -42,6 +90,20 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
 
   const { mutate } = useSWRConfig();
 
+  const { trigger: deleteNote, isMutating: isDeleting } = useSWRMutation(
+    "deleteNote",
+    deleteNoteFetcher,
+    {
+      onSuccess: () => {
+        mutate("/api/notes?pageNum=1&pageSize=999");
+        toast.success("Note deleted");
+      },
+      onError: () => {
+        toast.error("Failed to delete note");
+      },
+    },
+  );
+
   const form = useForm<TCreateNoteData>({
     resolver: zodResolver(createNoteSchema),
     defaultValues: {
@@ -50,74 +112,34 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
     },
   });
 
-  const handleCreateNote = async (values: TCreateNoteData) => {
-    await fetch("/api/notes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-  };
-
-  const handleUpdateNote = async (values: TCreateNoteData) => {
-    await fetch("/api/notes", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: noteToEdit!.id,
-        ...values,
-      }),
-    });
-  };
-
-  const handleDeleteNote = async () => {
-    try {
-      await fetch("/api/notes", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: noteToEdit!.id,
-        }),
-      });
-
-      mutate("/api/notes?pageNum=1&pageSize=999");
-      toast.success("Note deleted");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete note");
-    }
-
-    setOpen(false);
-  };
-
   const onSubmit = async (values: TCreateNoteData) => {
     try {
-      if (modalAction === "Create") {
-        await handleCreateNote(values);
+      if (!noteToEdit) {
+        await createNoteFetcher(values);
         toast.success("Note created");
         form.reset();
       } else {
-        await handleUpdateNote(values);
+        await updateNoteFetcher({
+          id: noteToEdit!.id,
+          title: values.title,
+          content: values.content ?? "",
+        });
         toast.success("Note updated");
       }
 
       mutate("/api/notes?pageNum=1&pageSize=999");
+      setOpen(false);
     } catch (error) {
       console.error(error);
       toast.error("Failed to create note");
     }
-
-    setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger asChild>
+        <div>{children}</div>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{modalAction} Note</DialogTitle>
@@ -158,16 +180,26 @@ const WriteNoteModal: FC<TProps> = ({ modalAction, noteToEdit, children }) => {
 
             <div className="flex">
               <div className="ms-auto flex gap-2">
-                {modalAction === "Update" && (
-                  <Button
+                {!!noteToEdit && (
+                  <LoadingButton
                     type="button"
                     variant="destructive"
-                    onClick={handleDeleteNote}
+                    isLoading={isDeleting}
+                    onClick={() =>
+                      deleteNote({
+                        id: noteToEdit.id,
+                      })
+                    }
                   >
                     Delete
-                  </Button>
+                  </LoadingButton>
                 )}
-                <Button type="submit">{modalAction}</Button>
+                <LoadingButton
+                  type="submit"
+                  isLoading={form.formState.isSubmitting}
+                >
+                  {modalAction}
+                </LoadingButton>
               </div>
             </div>
           </form>

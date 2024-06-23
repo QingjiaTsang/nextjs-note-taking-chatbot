@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import NoteCard from "@/app/(main)/notes/NoteCard";
+import Image from "next/image";
 
 type TProps = {};
 
@@ -40,7 +41,12 @@ const NoteList: FC<TProps> = (props) => {
   }
 
   if (!noteList?.length) {
-    return <div>No Note Found</div>;
+    return (
+      <div className="flex h-[calc(100vh-72px)] flex-col items-center justify-center">
+        <Image src={"/images/empty.png"} alt="empty" width={200} height={200} />
+        <p className="text-center text-2xl font-bold">No notes yet</p>
+      </div>
+    );
   }
 
   return (

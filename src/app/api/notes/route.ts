@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { getEmbedding } from "@/lib/openai";
 import {
   createNoteSchema,
   editNoteSchema,
   deleteNoteSchema,
 } from "@/zodValidation/notes";
+import { notesIndex } from "@/lib/pinecone";
 
 export async function GET(request: NextRequest) {
   try {
@@ -56,12 +58,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const note = await prisma.note.create({
-      data: {
-        title,
-        content,
-        authorId: userId,
-      },
+    const embedding = await getEmbeddingForNotes({
+      title,
+      content,
+    });
+
+    const note = await prisma.$transaction(async (tx) => {
+      const note = await tx.note.create({
+        data: {
+          title,
+          content,
+          authorId: userId,
+        },
+      });
+
+      await notesIndex.upsert([
+        {
+          id: note.id,
+          values: embedding,
+          // filter on userId to get only notes created by the current user
+          metadata: {
+            userId,
+          },
+        },
+      ]);
+
+      return note;
     });
 
     return NextResponse.json(note, { status: 201 });
@@ -100,14 +122,33 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const updatedNote = await prisma.note.update({
-      where: {
-        id,
-      },
-      data: {
-        title,
-        content,
-      },
+    const embedding = await getEmbeddingForNotes({
+      title,
+      content,
+    });
+
+    const updatedNote = await prisma.$transaction(async (tx) => {
+      const updatedNote = await tx.note.update({
+        where: {
+          id,
+        },
+        data: {
+          title,
+          content,
+        },
+      });
+
+      await notesIndex.upsert([
+        {
+          id: updatedNote.id,
+          values: embedding,
+          metadata: {
+            userId,
+          },
+        },
+      ]);
+
+      return updatedNote;
     });
 
     return NextResponse.json(updatedNote, { status: 200 });
@@ -146,16 +187,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await prisma.note.delete({
-      where: {
-        id,
-      },
+    await prisma.$transaction(async (tx) => {
+      await tx.note.delete({
+        where: {
+          id,
+        },
+      });
+
+      await notesIndex.deleteOne(id);
     });
 
-    return NextResponse.json(
-      { message: "Note deleted successfully" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: "Note deleted" }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -164,3 +206,13 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
+const getEmbeddingForNotes = async ({
+  title,
+  content,
+}: {
+  title: string;
+  content?: string;
+}) => {
+  return getEmbedding(`${title} \n\n ${content ?? ""}`);
+};

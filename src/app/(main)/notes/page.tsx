@@ -1,10 +1,6 @@
 import NoteList from "@/app/(main)/notes/NoteList";
 
 const NotesPage = () => {
-  return (
-    <div>
-      <NoteList />
-    </div>
-  );
+  return <NoteList />;
 };
 export default NotesPage;
