@@ -18,7 +18,6 @@ const AIChatModal: FC<TProps> = ({ open, onClose }) => {
     setMessages,
     error,
     input,
-    setInput,
     handleInputChange,
     handleSubmit,
     isLoading,
@@ -134,7 +133,6 @@ const ChatMessage = ({
           className="mr-2 shrink-0 rounded-full object-cover"
         />
       )}
-      {/* {!isUser && <Bot className="mr-2 h-10 w-10 shrink-0 rounded-full" />} */}
       <div
         className={cn(
           "max-w-xs rounded-lg p-4 shadow-lg md:max-w-md lg:max-w-lg xl:max-w-xl",
