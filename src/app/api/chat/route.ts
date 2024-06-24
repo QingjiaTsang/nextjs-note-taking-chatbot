@@ -10,6 +10,9 @@ import prisma from "@/lib/prisma";
 
 import { auth } from "@clerk/nextjs/server";
 
+// Allow streaming responses up to 30 seconds
+export const maxDuration = 30;
+
 // !Note: must customize the OpenAI provider for our baseURL and API key
 // reference:
 // https://sdk.vercel.ai/providers/ai-sdk-providers/openai#provider-instance
