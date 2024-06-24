@@ -5,6 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ToastProvider from "@/components/ToastProvider";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,6 +31,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <SpeedInsights />
             <ToastProvider />
             <div>{children}</div>
           </ThemeProvider>

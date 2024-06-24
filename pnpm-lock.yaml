@@ -34,6 +34,9 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.0.0)(react@18.0.0)
+  '@vercel/speed-insights':
+    specifier: ^1.0.12
+    version: 1.0.12(next@14.2.3)(react@18.0.0)(svelte@4.2.18)(vue@3.4.27)
   ai:
     specifier: ^3.1.30
     version: 3.1.30(openai@4.49.0)(react@18.0.0)(solid-js@1.8.17)(svelte@4.2.18)(vue@3.4.27)(zod@3.23.8)
@@ -1585,6 +1588,36 @@ packages:
       '@typescript-eslint/types': 7.2.0
       eslint-visitor-keys: 3.4.3
     dev: true
+
+  /@vercel/speed-insights@1.0.12(next@14.2.3)(react@18.0.0)(svelte@4.2.18)(vue@3.4.27):
+    resolution: {integrity: sha512-ZGQ+a7bcfWJD2VYEp2R1LHvRAMyyaFBYytZXsfnbOMkeOvzGNVxUL7aVUvisIrTZjXTSsxG45DKX7yiw6nq2Jw==}
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19
+      svelte: ^4
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 14.2.3(react-dom@18.0.0)(react@18.0.0)
+      react: 18.0.0
+      svelte: 4.2.18
+      vue: 3.4.27(typescript@5.0.2)
+    dev: false
 
   /@vue/compiler-core@3.4.27:
     resolution: {integrity: sha512-E+RyqY24KnyDXsCuQrI+mlcdW3ALND6U7Gqa/+bVwbcpcR3BRRIckFoz7Qyd4TTlnugtwuI7YgjbvsLmxb+yvg==}
