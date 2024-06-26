@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+
 import {
   SignInButton,
   SignOutButton,
@@ -6,8 +8,13 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-import Image from "next/image";
-import Link from "next/link";
+
+import { ModeToggle } from "@/components/ModeToggle";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Separator } from "@radix-ui/react-separator";
+
+import { MenuIcon } from "lucide-react";
 
 export default function Website() {
   return (
@@ -22,25 +29,64 @@ export default function Website() {
           />
           <div className="font-bold">NoteBot</div>
         </Link>
-        <nav className="ms-auto flex gap-2 md:gap-4">
-          <SignedOut>
-            <SignInButton>
-              <Button size={"sm"}>Sign In</Button>
-            </SignInButton>
-            <SignUpButton>
-              <Button size={"sm"} variant={"secondary"}>
-                Sign Up
+        <div className="ml-auto flex items-center gap-4 sm:gap-6">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full lg:hidden"
+              >
+                <MenuIcon className="h-6 w-6" />
+                <span className="sr-only">Toggle navigation menu</span>
               </Button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <SignOutButton>
-              <Button size={"sm"} variant={"secondary"}>
-                Sign Out
-              </Button>
-            </SignOutButton>
-          </SignedIn>
-        </nav>
+            </SheetTrigger>
+            <SheetContent side="top">
+              <div className="grid gap-4 py-6">
+                <SignedOut>
+                  <div className="flex w-full items-center py-1 text-lg font-semibold">
+                    <SignInButton>Sign In</SignInButton>
+                  </div>
+                  <div className="flex w-full items-center py-1 text-lg font-semibold">
+                    <SignUpButton>Sign Up</SignUpButton>
+                  </div>
+                </SignedOut>
+                <SignedIn>
+                  <div className="flex w-full items-center py-1 text-lg font-semibold">
+                    <SignOutButton>Sign Out</SignOutButton>
+                  </div>
+                </SignedIn>
+
+                <Separator className="my-1 border-t border-gray-200" />
+                <div className="flex w-full items-center justify-between gap-2">
+                  <div>Switch Theme: </div>
+                  <ModeToggle />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          <nav className="hidden gap-2 lg:flex">
+            <SignedOut>
+              <SignInButton>
+                <Button size={"sm"}>Sign In</Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button size={"sm"} variant={"secondary"}>
+                  Sign Up
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <SignOutButton>
+                <Button size={"sm"} variant={"secondary"}>
+                  Sign Out
+                </Button>
+              </SignOutButton>
+            </SignedIn>
+            <ModeToggle />
+          </nav>
+        </div>
       </header>
       <main className="flex-1">
         <section className="w-full bg-[#1F2937] py-12 text-white md:py-24 lg:py-32 xl:py-48">

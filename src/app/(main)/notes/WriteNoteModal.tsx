@@ -135,7 +135,10 @@ const WriteNoteModal: FC<TProps> = ({
       setOpen(false);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create note");
+      if (!noteToEdit) {
+        toast.error("Failed to create note");
+      }
+      toast.error("Failed to update note");
     }
   };
 

@@ -2,28 +2,32 @@
 import React, { FC, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 import { ModeToggle } from "@/components/ModeToggle";
 import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
-
-import { Bot, Menu, Plus } from "lucide-react";
 import AIChatModal from "@/components/AIChatModal";
+
+import { Bot, MenuIcon, Plus } from "lucide-react";
 
 type TProps = {};
 const NavBar: FC<TProps> = (props) => {
   const { theme } = useTheme();
 
+  const [openDropdownMenu, setOpenDropdownMenu] = useState(false);
   const [openWriteNoteModal, setOpenWriteNoteModal] = useState(false);
   const [openAIChatModal, setOpenAIChatModal] = useState(false);
 
@@ -41,47 +45,53 @@ const NavBar: FC<TProps> = (props) => {
         </Link>
 
         <div className="ms-auto block md:hidden">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu />
-                <span className="sr-only">menu button</span>
+          <Sheet open={openDropdownMenu} onOpenChange={setOpenDropdownMenu}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full lg:hidden"
+              >
+                <MenuIcon className="h-6 w-6" />
+                <span className="sr-only">Toggle navigation menu</span>
               </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <div className="flex w-full items-center gap-1">
-                  <ModeToggle />
-                  <div>{theme === "dark" ? "Dark" : "Light"} Mode</div>
-                </div>
-              </DropdownMenuItem>
-
-              <SignedIn>
-                <DropdownMenuItem>
+            </SheetTrigger>
+            <SheetContent side="top">
+              <div className="grid gap-4 py-6">
+                <SignedIn>
                   <Button
-                    className="w-full"
+                    className="left w-full"
                     size={"sm"}
-                    onClick={() => setOpenWriteNoteModal(true)}
+                    onClick={() => {
+                      setOpenWriteNoteModal(true);
+                      setOpenDropdownMenu(false);
+                    }}
                   >
                     <Plus />
                     Add Note
                   </Button>
-                </DropdownMenuItem>
 
-                <DropdownMenuItem>
                   <Button
                     className="w-full"
                     size={"sm"}
-                    onClick={() => setOpenAIChatModal(true)}
+                    onClick={() => {
+                      setOpenAIChatModal(true);
+                      setOpenDropdownMenu(false);
+                    }}
                   >
                     <Bot className="mr-2 h-5 w-5" />
                     AI Chat
                   </Button>
-                </DropdownMenuItem>
-              </SignedIn>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                </SignedIn>
+
+                <Separator className="my-1 border-t border-gray-200" />
+                <div className="flex w-full items-center justify-between gap-2">
+                  <div>Switch Theme: </div>
+                  <ModeToggle />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
         <div className="ms-auto hidden items-center gap-1 md:flex">

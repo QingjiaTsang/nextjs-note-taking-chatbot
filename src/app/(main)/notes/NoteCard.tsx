@@ -32,7 +32,7 @@ const NoteCard: FC<TProps> = ({ note }) => {
         <CardHeader>
           <HoverCard>
             <HoverCardTrigger>
-              <CardTitle className="group w-full truncate">
+              <CardTitle className="w-full truncate p-0.5">
                 {note.title}
               </CardTitle>
             </HoverCardTrigger>
