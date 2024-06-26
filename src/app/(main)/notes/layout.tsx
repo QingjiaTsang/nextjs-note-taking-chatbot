@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import NavBar from "@/app/(main)/notes/NavBar";
+import NavBar from "@/app/(main)/notes/_components/NavBar";
 
 export const metadata: Metadata = {
   title: "NoteBot",

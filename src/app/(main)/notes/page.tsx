@@ -1,4 +1,4 @@
-import NoteList from "@/app/(main)/notes/NoteList";
+import NoteList from "@/app/(main)/notes/_components/NoteList";
 
 const NotesPage = () => {
   return <NoteList />;

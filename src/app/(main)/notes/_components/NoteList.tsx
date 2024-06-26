@@ -6,7 +6,7 @@ import useSWR from "swr";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import NoteCard from "@/app/(main)/notes/NoteCard";
+import NoteCard from "@/app/(main)/notes/_components/NoteCard";
 import Image from "next/image";
 
 type TProps = {};

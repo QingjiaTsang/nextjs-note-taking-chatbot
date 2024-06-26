@@ -14,7 +14,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
+import WriteNoteModal from "@/app/(main)/notes/_components/WriteNoteModal";
 
 type TProps = {
   note: Note;

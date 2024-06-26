@@ -18,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 import { ModeToggle } from "@/components/ModeToggle";
-import WriteNoteModal from "@/app/(main)/notes/WriteNoteModal";
+import WriteNoteModal from "@/app/(main)/notes/_components/WriteNoteModal";
 import AIChatModal from "@/components/AIChatModal";
 
 import { Bot, MenuIcon, Plus } from "lucide-react";
