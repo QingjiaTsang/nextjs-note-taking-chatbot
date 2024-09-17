@@ -62,7 +62,7 @@ const NoteList: FC<TProps> = (props) => {
     return (
       <div className="flex h-[calc(100vh-72px)] flex-col items-center justify-center">
         <Image src={"/images/empty.png"} alt="empty" width={200} height={200} />
-        <p className="text-center text-2xl font-bold">没有笔记</p>
+        <p className="text-center text-2xl font-bold">no notes yet</p>
       </div>
     );
   }

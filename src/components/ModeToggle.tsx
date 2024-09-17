@@ -21,7 +21,7 @@ import {
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
@@ -50,9 +50,9 @@ export function ModeToggle() {
   }
 
   return (
-    <Select defaultValue="system" onValueChange={(value) => setTheme(value)}>
+    <Select defaultValue="system" value={theme} onValueChange={(value) => setTheme(value)}>
       <SelectTrigger className="w-[6rem]">
-        <SelectValue placeholder="System" />
+        <SelectValue />
       </SelectTrigger>
       <SelectContent className="z-50">
         <SelectItem value="light">Light</SelectItem>
